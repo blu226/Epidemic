@@ -1,0 +1,12 @@
+startTime = 0
+Link_Exists_path = 'Bands_UMass/2007-10-23_2007-10-24/'
+DataMule_path = 'DataMules1/2007-10-23_2007-10-24/Day1/'
+minBW = [3, 8, 20, 40]
+maxBW = [6, 20, 30, 60]
+spectRange = [3600, 920, 2400, 700]
+M = [1,10,25,50,100,500,750,1000]
+maxTau = 10
+num_messages = 25
+num_sources = 6
+num_des = 3
+T = 120
