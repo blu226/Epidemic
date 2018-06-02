@@ -7,13 +7,15 @@ from generateMessage_new import *
 
 #Function create_constants: creates a constants file for the given simulation
 def create_constants(startTime):
-    Link_Exists_path = "path_to_GPS = \'Bands/Bands/'" + "\n"
+    Link_Exists_path = "Link_Exists_path = \'Bands_UMass/2007-10-23_2007-10-24/'" + "\n"
+    DataMule_path = " DataMule_path = \'DataMules1/2007-10-23_2007-10-24/Day1/\' " + "\n"
     time = "startTime = " + str(startTime) + "\n"
 
     f = open("constants.py", "w")
 
     f.write(time)
     f.write(Link_Exists_path)
+    f.write(DataMule_path)
 
     f.write("minBW = [3, 8, 20, 40]\n")
     f.write("maxBW = [6, 20, 30, 60]\n")
