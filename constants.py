@@ -1,8 +1,10 @@
 startTime = 0
 Link_Exists_path = 'Bands_UMass/2007-10-23_2007-10-24/'
-DataMule_path = 'DataMules1/2007-10-23_2007-10-24/Day1/'
+DataMule_path = 'DataMules/2007-10-23_2007-10-24/Day1/'
 metrics_file_name = 'metrics.txt'
 delivery_file_name = 'delivered_messages.txt'
+generated_file_name = "generated_messages.txt"
+notDelivered_file_name = "not_delivered_messages.txt"
 minBW = [3, 8, 20, 40]
 maxBW = [6, 20, 30, 60]
 spectRange = [3600, 920, 2400, 700]

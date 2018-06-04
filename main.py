@@ -40,12 +40,12 @@ def create_constants(startTime):
 
 time = 0
     # print(day)
-output_file = open(Link_Exists_path + "/delivered_messages.txt", "w")
+output_file = open(Link_Exists_path + delivery_file_name, "w")
 output_file.write("ID\ts\td\tts\tte\tLLC\tsize\tparent\tparentTime\treplica\n")
 output_file.write("----------------------------------------------------\n")
 output_file.close()
 
-output_file2 = open(Link_Exists_path + "/all_messages.txt", "w")
+output_file2 = open(Link_Exists_path + notDelivered_file_name, "w")
 output_file2.write("ID\ts\td\tts\tte\tLLC\tsize\tparent\tparentTime\treplica\n")
 output_file2.write("----------------------------------------------------\n")
 output_file2.close()
@@ -66,4 +66,4 @@ for i in range(T):
     print("TIME: " + str(i))
     net.network_GO(i + time, LINK_EXISTS, specBW)
 
-# net.all_messages()
+net.all_messages()

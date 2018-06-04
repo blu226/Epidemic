@@ -35,12 +35,11 @@ class network(object):
 
 #Function send_message: sends message to all nodes in range
     def send_message(self,src_node, message, tau, LINK_EXISTS, specBW):
-
-        to_send = True
         replica = 0
-
         for des_node in self.nodes:
-            if des_node != src_node and message not in des_node.buf:
+            to_send = True
+
+            if des_node != src_node:
                 for mes in des_node.buf:
                     if mes.ID == message.ID:
                         to_send = False
@@ -67,7 +66,7 @@ class network(object):
 
 #Function add_messages: adds messages to their source node at each tau
     def add_messages(self, time):
-        with open("generated_messages.txt", "r") as f:
+        with open(generated_file_name, "r") as f:
             lines = f.readlines()
 
         for line in lines:
@@ -83,7 +82,7 @@ class network(object):
         for node in self.nodes:
             for mes in node.buf:
                 if int(mes.des) == int(node.ID):
-                    f = open(Link_Exists_path + "delivered_messages.txt", "a")
+                    f = open(Link_Exists_path + delivery_file_name, "a")
                     line = str(mes.ID) + "\t" + str(mes.src) + "\t" + str(mes.des) + "\t" + str(mes.genT) + "\t" + str(self.time)+ "\t" + str(mes.last_sent - mes.genT) + "\t" + str(mes.size) + "\t\t" + str(mes.parent) + "\t\t" + str(mes.parentTime) + "\t\t\t" + str(mes.replica) + "\n"
                   #  print(line)
                     f.write(line)
@@ -91,7 +90,7 @@ class network(object):
                     node.buf.remove(mes)
 
     def all_messages(self):
-        f = open(Link_Exists_path + "all_messages.txt", "a")
+        f = open(Link_Exists_path + notDelivered_file_name, "a")
         for node in self.nodes:
             print("Node " + str(node.ID) + ": ")
             for mes in node.buf:

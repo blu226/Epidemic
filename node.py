@@ -16,6 +16,10 @@ def can_transfer(size, s, seconds, specBW, i, j, t):
     else:
         return False
 
+def find_delay(size, s, specBW, i, j, t):
+    bw = specBW[i,j,s,t]
+    return math.ceil(size/bw)
+
 
 #Function init: initialize variables
 class node(object):
@@ -40,11 +44,40 @@ class node(object):
                         spec_to_use.append(s)
 
                 for spec in range(len(spec_to_use)):
-                    if can_transfer(mes.size, spec_to_use[spec], (te - ts) * 60, specBW, self.ID, des_node.ID, ts):
+                    if can_transfer(mes.size, spec_to_use[spec], (te - ts), specBW, self.ID, des_node.ID, ts):
                         new_message = message(mes.ID, mes.src, mes.des, mes.genT, mes.size )
                         new_message.set(te, replicaID, te, self.ID)
                         des_node.buf.append(new_message)
 
                         return True
             return False
+
+    def send_message2(self, des_node, mes, ts, replicaID, LINK_EXISTS, specBW):
+
+        if mes.last_sent < ts:
+
+            S = [0, 2, 1, 3]
+
+            for s in S:
+
+                i = self.ID
+                j = des_node.ID
+
+                delay = find_delay(mes.size, s, specBW, i, j, ts)
+                te = ts + delay
+
+                if te < T:
+
+                    if LINK_EXISTS[i, j, s, ts, te] == 1:
+                        new_message = message(mes.ID, mes.src, mes.des, mes.genT, mes.size)
+                        new_message.set(te, replicaID, te, i)
+                        des_node.buf.append(new_message)
+
+                        return True
+
+
+        return False
+
+
+
 
