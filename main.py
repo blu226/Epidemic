@@ -51,6 +51,7 @@ output_file2.write("----------------------------------------------------\n")
 output_file2.close()
 #Load Link Exists
 LINK_EXISTS = pickle.load(open(Link_Exists_path + "LINK_EXISTS.pkl", "rb"))
+specBW = pickle.load(open(Link_Exists_path + "specBW.pkl", "rb"))
 #Create constants
 # create_constants(time)
 #Create network
@@ -63,6 +64,6 @@ net.fill_network()
 #Run simulation
 for i in range(T):
     print("TIME: " + str(i))
-    net.network_GO(i + time, LINK_EXISTS)
+    net.network_GO(i + time, LINK_EXISTS, specBW)
 
-net.all_messages()
+# net.all_messages()

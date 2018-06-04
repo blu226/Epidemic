@@ -1,14 +1,14 @@
 #NODE CLASS
 from constants import *
-from computeHarvesine import *
 from message import *
 import random
 import math
+import numpy
 
 
 
-def can_transfer(size, s, seconds):
-    bw = random.randint(minBW[s], maxBW[s])
+def can_transfer(size, s, seconds, specBW, i, j, t):
+    bw = specBW[i,j,s,t]
     time_to_transfer = math.ceil(size/bw)
 
     if time_to_transfer < seconds:
@@ -24,7 +24,7 @@ class node(object):
         self.buf = []
 
 #Function send_message: sends message to a node if it doesn't have the message already
-    def send_message(self, des_node, mes, ts, replicaID, LINK_EXISTS):
+    def send_message(self, des_node, mes, ts, replicaID, LINK_EXISTS, specBW):
 
         if mes.last_sent < ts:
             max_end = ts + maxTau
@@ -40,7 +40,7 @@ class node(object):
                         spec_to_use.append(s)
 
                 for spec in range(len(spec_to_use)):
-                    if can_transfer(mes.size, spec_to_use[spec], (te - ts) * 60):
+                    if can_transfer(mes.size, spec_to_use[spec], (te - ts) * 60, specBW, self.ID, des_node.ID, ts):
                         new_message = message(mes.ID, mes.src, mes.des, mes.genT, mes.size )
                         new_message.set(te, replicaID, te, self.ID)
                         des_node.buf.append(new_message)

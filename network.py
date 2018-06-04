@@ -34,7 +34,7 @@ class network(object):
             self.add_node(node_curr)
 
 #Function send_message: sends message to all nodes in range
-    def send_message(self,src_node, message, tau, LINK_EXISTS):
+    def send_message(self,src_node, message, tau, LINK_EXISTS, specBW):
 
         to_send = True
         replica = 0
@@ -46,7 +46,7 @@ class network(object):
                         to_send = False
 
                 if to_send == True:
-                    if src_node.send_message(des_node, message, tau, replica, LINK_EXISTS):
+                    if src_node.send_message(des_node, message, tau, replica, LINK_EXISTS, specBW):
                        # print("SENDING: " + str(message.ID) + " at time " + str(tau) + " from " + str(src_node.ID))
                         replica += 1
 
@@ -101,7 +101,7 @@ class network(object):
         f.close()
 
 #Function network_GO: completes all tasks of a network in 1 tau
-    def network_GO(self, tau, LINK_EXISTS):
+    def network_GO(self, tau, LINK_EXISTS, specBW):
         self.time = tau
     #Send all messages
         #For each node
@@ -110,7 +110,7 @@ class network(object):
             node = self.nodes[i]
             for mes in node.buf:
                 if mes.last_sent < tau:
-                    self.send_message(node, mes, tau, LINK_EXISTS)
+                    self.send_message(node, mes, tau, LINK_EXISTS, specBW)
     #Handle messages that got delivered
         self.messages_delivered()
      #Check if new messages were generated
