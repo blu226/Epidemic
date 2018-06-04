@@ -10,7 +10,7 @@ def compute_metrics(lines, total_messages, delivery_time):
         line_arr = line.strip().split("\t")
         if int(line_arr[4]) < delivery_time and int(line_arr[0]) not in mes_IDs:
             delivered += 1
-            latency += int(line_arr[6])
+            latency += int(line_arr[5])
             # energy += float(line_arr[7])
             mes_IDs.append(int(line_arr[0]))
 
@@ -27,7 +27,7 @@ def compute_metrics(lines, total_messages, delivery_time):
 
 
 #Main starts here
-msg_file = open("generated_messages.txt", "r")
+msg_file = open(Link_Exists_path + generated_file_name, "r")
 total_messages = len(msg_file.readlines()[1:])
 
 metric_file = open(Link_Exists_path + metrics_file_name, "w")

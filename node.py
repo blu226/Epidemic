@@ -8,17 +8,18 @@ import numpy
 
 
 def can_transfer(size, s, seconds, specBW, i, j, t):
-    bw = specBW[i,j,s,t]
-    time_to_transfer = math.ceil(size/bw)
+    numerator = math.ceil(size / specBW[i, j, s, t]) * (t_sd + idle_channel_prob * t_td)
+    time_to_transfer = tau * math.ceil(numerator / tau)
 
-    if time_to_transfer < seconds:
+
+    if time_to_transfer <= seconds:
         return True
     else:
         return False
 
 def find_delay(size, s, specBW, i, j, t):
     bw = specBW[i,j,s,t]
-    return math.ceil(size/bw)
+    return size/bw
 
 
 #Function init: initialize variables
@@ -28,9 +29,9 @@ class node(object):
         self.buf = []
 
 #Function send_message: sends message to a node if it doesn't have the message already
-    def send_message(self, des_node, mes, ts, replicaID, LINK_EXISTS, specBW):
+    def try_sending_message(self, des_node, mes, ts, replicaID, LINK_EXISTS, specBW):
 
-        if mes.last_sent < ts:
+        if mes.last_sent <= ts:
             max_end = ts + maxTau
 
             if max_end > T:

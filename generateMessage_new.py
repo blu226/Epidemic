@@ -1,10 +1,10 @@
 from constants import *
 import random
 
-def create_messages(path_to_folder):
+def create_messages():
 
-    message_file = open("generated_messages.txt", "w")
-    with open(path_to_folder + "LLC_PATH.txt", "r") as fp:
+    message_file = open(Link_Exists_path + generated_file_name, "w")
+    with open(Link_Exists_path + "LLC_PATH.txt", "r") as fp:
         path_lines = fp.readlines()[1:]
     fp.close()
 
@@ -18,8 +18,6 @@ def create_messages(path_to_folder):
         des = int(line_arr[1])
         genT = int(line_arr[2])
         size = int(line_arr[3])
-
-        generateMessage = True
 
         path = line_arr[4:]
 
@@ -45,10 +43,11 @@ def create_messages(path_to_folder):
                 message_file.write(
                     str(id) + "\t" + str(src) + "\t" + str(des) + "\t"  + "\t" + str(genT + startTime) + "\t" + str(size) + "\n")
 
-            # print(str(id) + "\t" + str(src) + "\t" + str(des) + "\t" + str(desired_TTL) + "\t" + str(size) + "\t" + str(genT) )
-
             id += 1
-            # if id > 500:
-            #     break
+
+    message_file.close()
+
+
+
 
 

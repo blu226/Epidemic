@@ -34,7 +34,7 @@ class network(object):
             self.add_node(node_curr)
 
 #Function send_message: sends message to all nodes in range
-    def send_message(self,src_node, message, tau, LINK_EXISTS, specBW):
+    def try_forwarding_message_to_all(self,src_node, message, tau, LINK_EXISTS, specBW):
         replica = 0
         for des_node in self.nodes:
             to_send = True
@@ -45,16 +45,10 @@ class network(object):
                         to_send = False
 
                 if to_send == True:
-                    if src_node.send_message(des_node, message, tau, replica, LINK_EXISTS, specBW):
+                    if src_node.try_sending_message(des_node, message, tau, replica, LINK_EXISTS, specBW):
                        # print("SENDING: " + str(message.ID) + " at time " + str(tau) + " from " + str(src_node.ID))
                         replica += 1
 
-
-
-#Function update_nodes: updates each nodes position for a given time
-    def update_nodes(self):
-        for i in range(len(self.nodes)):
-            self.nodes[i].update_position(self.time)
 
 #Function is_in_communication_range: checks if 2 nodes are within range of a certain spectrum
     def is_in_communication_range(self, node1, node2):
@@ -66,7 +60,7 @@ class network(object):
 
 #Function add_messages: adds messages to their source node at each tau
     def add_messages(self, time):
-        with open(generated_file_name, "r") as f:
+        with open(Link_Exists_path + generated_file_name, "r") as f:
             lines = f.readlines()
 
         for line in lines:
@@ -83,8 +77,8 @@ class network(object):
             for mes in node.buf:
                 if int(mes.des) == int(node.ID):
                     f = open(Link_Exists_path + delivery_file_name, "a")
-                    line = str(mes.ID) + "\t" + str(mes.src) + "\t" + str(mes.des) + "\t" + str(mes.genT) + "\t" + str(self.time)+ "\t" + str(mes.last_sent - mes.genT) + "\t" + str(mes.size) + "\t\t" + str(mes.parent) + "\t\t" + str(mes.parentTime) + "\t\t\t" + str(mes.replica) + "\n"
-                  #  print(line)
+                    line = str(mes.ID) + "\t" + str(mes.src) + "\t" + str(mes.des) + "\t" + str(mes.genT) + "\t" + str(mes.last_sent)+ "\t" + str(mes.last_sent - mes.genT) + "\t" + str(mes.size) + "\t\t" + str(mes.parent) + "\t\t" + str(mes.parentTime) + "\t\t\t" + str(mes.replica) + "\n"
+
                     f.write(line)
                     f.close()
                     node.buf.remove(mes)
@@ -94,23 +88,23 @@ class network(object):
         for node in self.nodes:
             print("Node " + str(node.ID) + ": ")
             for mes in node.buf:
-                line = str(mes.ID) + "\t" + str(mes.src) + "\t" + str(mes.des) + "\t" + str(mes.genT) + "\t" + str(self.time) + "\t" + str(mes.last_sent - mes.genT) + "\t" + str(mes.size) + "\t" + str(mes.parent) + "\t" + str(mes.parentTime) + "\t" + str(mes.replica) + "\n"
+                line = str(mes.ID) + "\t" + str(mes.src) + "\t" + str(mes.des) + "\t" + str(mes.genT) + "\t" + str(mes.last_sent) + "\t" + str(mes.last_sent - mes.genT) + "\t" + str(mes.size) + "\t" + str(mes.parent) + "\t" + str(mes.parentTime) + "\t" + str(mes.replica) + "\n"
                 print(line)
                 f.write(line)
         f.close()
 
 #Function network_GO: completes all tasks of a network in 1 tau
-    def network_GO(self, tau, LINK_EXISTS, specBW):
-        self.time = tau
+    def network_GO(self, ts, LINK_EXISTS, specBW):
+        self.time = ts
     #Send all messages
         #For each node
         for i in range(len(self.nodes)):
             #For each message in this nodes buffer
             node = self.nodes[i]
             for mes in node.buf:
-                if mes.last_sent < tau:
-                    self.send_message(node, mes, tau, LINK_EXISTS, specBW)
+                if mes.last_sent <= ts:
+                    self.try_forwarding_message_to_all(node, mes, ts, LINK_EXISTS, specBW)
     #Handle messages that got delivered
         self.messages_delivered()
      #Check if new messages were generated
-        self.add_messages(tau)
+        self.add_messages(ts)

@@ -17,9 +17,6 @@ def create_constants(startTime):
     f.write(Link_Exists_path)
     f.write(DataMule_path)
 
-    f.write("minBW = [3, 8, 20, 40]\n")
-    f.write("maxBW = [6, 20, 30, 60]\n")
-    f.write("spectRange = [3600, 920, 2400, 700]\n")
     f.write("M = [1,10,25,50,100,500,750,1000]\n")
     f.write("maxTau = 10\n")
     f.write("num_messages = 25\n")
@@ -54,6 +51,8 @@ LINK_EXISTS = pickle.load(open(Link_Exists_path + "LINK_EXISTS.pkl", "rb"))
 specBW = pickle.load(open(Link_Exists_path + "specBW.pkl", "rb"))
 #Create constants
 # create_constants(time)
+#Generate Messages
+create_messages()
 #Create network
 net = network()
 #Fill network with datamules, sources, and destinations
@@ -64,6 +63,6 @@ net.fill_network()
 #Run simulation
 for i in range(T):
     print("TIME: " + str(i))
-    net.network_GO(i + time, LINK_EXISTS, specBW)
+    net.network_GO(i , LINK_EXISTS, specBW)
 
 net.all_messages()
