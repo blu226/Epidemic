@@ -7,10 +7,11 @@ import numpy
 
 
 
-def can_transfer(size, s, seconds, specBW, i, j, t):
+def can_transfer(size, s, seconds, specBW, i, j, t, replicaID):
     numerator = math.ceil(size / specBW[i, j, s, t]) * (t_sd + idle_channel_prob * t_td)
     time_to_transfer = tau * math.ceil(numerator / tau)
-
+    if replicaID == 7:
+        print("Message 7: ", i, j, t)
 
     if time_to_transfer <= seconds:
         return True
@@ -41,11 +42,12 @@ class node(object):
                 spec_to_use = []
 
                 for s in range(4):
+
                     if LINK_EXISTS[self.ID, des_node.ID, s, int(ts - startTime), int(te - startTime)] == 1:
                         spec_to_use.append(s)
 
                 for spec in range(len(spec_to_use)):
-                    if can_transfer(mes.size, spec_to_use[spec], (te - ts), specBW, self.ID, des_node.ID, ts):
+                    if can_transfer(mes.size, spec_to_use[spec], (te - ts), specBW, self.ID, des_node.ID, ts, mes.ID):
                         new_message = message(mes.ID, mes.src, mes.des, mes.genT, mes.size )
                         new_message.set(te, replicaID, te, self.ID)
                         des_node.buf.append(new_message)

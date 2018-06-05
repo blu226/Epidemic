@@ -1,6 +1,6 @@
 startTime = 0
-Link_Exists_path = 'Bands_UMass/2007-10-24_2007-10-25/'
-DataMule_path = 'DataMules/2007-10-24_2007-10-25/Day1/'
+Link_Exists_path = 'Bands_test/'
+DataMule_path = 'Bands_test/DataMules/'
 metrics_file_name = 'metrics.txt'
 delivery_file_name = 'delivered_messages.txt'
 generated_file_name = "generated_messages.txt"
@@ -11,7 +11,7 @@ maxTau = 10
 num_messages = 500
 num_sources = 6
 num_des = 3
-T = 120
+T = 7
 tau = 1
 t_sd = 0.5
 t_td = 1

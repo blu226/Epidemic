@@ -4,6 +4,133 @@ import os
 import pickle
 from generateMessage_new import *
 
+def createLinkExistenceADJ():
+
+    LINK_EXISTS = numpy.empty(shape=(5, 5, 4, 7, 7))
+    LINK_EXISTS.fill(math.inf)
+
+    for i in range(5):
+        for s in range(4):
+            for t in range(5, 1):
+                LINK_EXISTS[i, i, s, t, t + 1] = 1
+
+    # # t = [0,1]
+    # LINK_EXISTS[0, 1, 0, 0, 1] = 1
+    # LINK_EXISTS[1, 0, 0, 0, 1] = 1
+    # LINK_EXISTS[0, 1, 1, 0, 1] = 1
+    # LINK_EXISTS[1, 0, 1, 0, 1] = 1
+    # LINK_EXISTS[1, 3, 0, 0, 1] = 1
+    # LINK_EXISTS[3, 1, 0, 0, 1] = 1
+    #
+    # #t = [1,2]
+    # LINK_EXISTS[1, 3, 0, 1, 2] = 1
+    # LINK_EXISTS[3, 1, 0, 1, 2] = 1
+    # LINK_EXISTS[1, 3, 1, 1, 2] = 1
+    # LINK_EXISTS[3, 1, 1, 1, 2] = 1
+    # LINK_EXISTS[2, 3, 0, 1, 2] = 1
+    # LINK_EXISTS[3, 2, 0, 1, 2] = 1
+    # LINK_EXISTS[2, 3, 1, 1, 2] = 1
+    # LINK_EXISTS[3, 2, 1, 1, 2] = 1
+    #
+    # # t= [2,3]
+    # LINK_EXISTS[0, 1, 0, 2, 3] = 1
+    # LINK_EXISTS[1, 0, 0, 2, 3] = 1
+    # LINK_EXISTS[1, 3, 0, 2, 3] = 1
+    # LINK_EXISTS[3, 1, 0, 2, 3] = 1
+    # LINK_EXISTS[2, 3, 0, 2, 3] = 1
+    # LINK_EXISTS[3, 2, 0, 2, 3] = 1
+    # LINK_EXISTS[2, 3, 1, 2, 3] = 1
+    # LINK_EXISTS[3, 2, 1, 2, 3] = 1
+    #
+    # # t = [3,4]
+    # LINK_EXISTS[0, 3, 0, 3, 4] = 1
+    # LINK_EXISTS[3, 0, 0, 3, 4] = 1
+    # LINK_EXISTS[0, 3, 1, 3, 4] = 1
+    # LINK_EXISTS[3, 0, 1, 3, 4] = 1
+    # LINK_EXISTS[2, 3, 0, 3, 4] = 1
+    # LINK_EXISTS[3, 2, 0, 3, 4] = 1
+
+    # t = [0,1]
+    LINK_EXISTS[0, 1, 0, 0, 1] = 1
+    LINK_EXISTS[0, 1, 1, 0, 1] = 1
+    LINK_EXISTS[0, 2, 0, 0, 1] = 1
+    LINK_EXISTS[0, 2, 1, 0, 1] = 1
+    LINK_EXISTS[0, 4, 2, 0, 1] = 1
+    LINK_EXISTS[1, 2, 0, 0, 1] = 1
+    LINK_EXISTS[1, 0, 0, 0, 1] = 1
+    LINK_EXISTS[1, 0, 1, 0, 1] = 1
+    LINK_EXISTS[2, 0, 0, 0, 1] = 1
+    LINK_EXISTS[2, 0, 1, 0, 1] = 1
+    LINK_EXISTS[2, 1, 0, 0, 1] = 1
+    LINK_EXISTS[2, 3, 1, 0, 1] = 1
+    LINK_EXISTS[3, 2, 1, 0, 1] = 1
+    LINK_EXISTS[4, 0, 2, 0, 1] = 1
+
+    # t = [1,2]
+    LINK_EXISTS[0, 2, 0, 1, 2] = 1
+    LINK_EXISTS[0, 3, 2, 1, 2] = 1
+    LINK_EXISTS[0, 4, 1, 1, 2] = 1
+    LINK_EXISTS[0, 4, 2, 1, 2] = 1
+    LINK_EXISTS[1, 2, 1, 1, 2] = 1
+    LINK_EXISTS[1, 2, 2, 1, 2] = 1
+    LINK_EXISTS[2, 0, 0, 1, 2] = 1
+    LINK_EXISTS[2, 1, 1, 1, 2] = 1
+    LINK_EXISTS[2, 1, 2, 1, 2] = 1
+    LINK_EXISTS[2, 3, 1, 1, 2] = 1
+    LINK_EXISTS[3, 0, 2, 1, 2] = 1
+    LINK_EXISTS[3, 2, 1, 1, 2] = 1
+    LINK_EXISTS[3, 4, 2, 1, 2] = 1
+    LINK_EXISTS[4, 0, 0, 1, 2] = 1
+    LINK_EXISTS[4, 0, 1, 1, 2] = 1
+    LINK_EXISTS[4, 3, 2, 1, 2] = 1
+
+    # t = [2,3]
+    LINK_EXISTS[0, 3, 0, 2, 3] = 1
+    LINK_EXISTS[0, 3, 1, 2, 3] = 1
+    LINK_EXISTS[0, 3, 2, 2, 3] = 1
+    LINK_EXISTS[0, 4, 0, 2, 3] = 1
+    LINK_EXISTS[0, 4, 1, 2, 3] = 1
+    LINK_EXISTS[0, 4, 2, 2, 3] = 1
+    LINK_EXISTS[1, 2, 0, 2, 3] = 1
+    LINK_EXISTS[2, 1, 0, 2, 3] = 1
+    LINK_EXISTS[3, 0, 0, 2, 3] = 1
+    LINK_EXISTS[3, 0, 1, 2, 3] = 1
+    LINK_EXISTS[3, 0, 2, 2, 3] = 1
+    LINK_EXISTS[3, 4, 0, 2, 3] = 1
+    LINK_EXISTS[3, 4, 1, 2, 3] = 1
+    LINK_EXISTS[3, 4, 2, 2, 3] = 1
+    LINK_EXISTS[4, 0, 0, 2, 3] = 1
+    LINK_EXISTS[4, 0, 1, 2, 3] = 1
+    LINK_EXISTS[4, 0, 2, 2, 3] = 1
+    LINK_EXISTS[4, 3, 0, 2, 3] = 1
+    LINK_EXISTS[4, 3, 1, 2, 3] = 1
+    LINK_EXISTS[4, 3, 2, 2, 3] = 1
+
+    # t = [3,4]
+    LINK_EXISTS[0, 1, 0, 3, 4] = 1
+    LINK_EXISTS[0, 3, 1, 3, 4] = 1
+    LINK_EXISTS[1, 0, 0, 3, 4] = 1
+    LINK_EXISTS[1, 3, 0, 3, 4] = 1
+    LINK_EXISTS[1, 3, 2, 3, 4] = 1
+    LINK_EXISTS[2, 4, 1, 3, 4] = 1
+    LINK_EXISTS[3, 0, 1, 3, 4] = 1
+    LINK_EXISTS[3, 1, 0, 3, 4] = 1
+    LINK_EXISTS[3, 1, 2, 3, 4] = 1
+    LINK_EXISTS[4, 2, 1, 3, 4] = 1
+
+    # t = [4,5]
+    LINK_EXISTS[0, 1, 0, 4, 5] = 1
+    LINK_EXISTS[0, 1, 1, 4, 5] = 1
+    LINK_EXISTS[1, 0, 0, 4, 5] = 1
+    LINK_EXISTS[1, 0, 1, 4, 5] = 1
+    LINK_EXISTS[1, 3, 2, 4, 5] = 1
+    LINK_EXISTS[2, 3, 0, 4, 5] = 1
+    LINK_EXISTS[3, 1, 2, 4, 5] = 1
+    LINK_EXISTS[3, 2, 0, 4, 5] = 1
+    LINK_EXISTS[3, 4, 0, 4, 5] = 1
+    LINK_EXISTS[4, 3, 0, 4, 5] = 1
+
+    return LINK_EXISTS
 
 #Function create_constants: creates a constants file for the given simulation
 def create_constants(startTime):
@@ -47,12 +174,14 @@ output_file2.write("ID\ts\td\tts\tte\tLLC\tsize\tparent\tparentTime\treplica\n")
 output_file2.write("----------------------------------------------------\n")
 output_file2.close()
 #Load Link Exists
-LINK_EXISTS = pickle.load(open(Link_Exists_path + "LINK_EXISTS.pkl", "rb"))
+# LINK_EXISTS = pickle.load(open(Link_Exists_path + "LINK_EXISTS.pkl", "rb"))
 specBW = pickle.load(open(Link_Exists_path + "specBW.pkl", "rb"))
+LINK_EXISTS = createLinkExistenceADJ()
+print(LINK_EXISTS[3,4,])
 #Create constants
 # create_constants(time)
 #Generate Messages
-create_messages()
+# create_messages()
 #Create network
 net = network()
 #Fill network with datamules, sources, and destinations

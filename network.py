@@ -65,8 +65,10 @@ class network(object):
 
         for line in lines:
             line_arr = line.strip().split()
-            if int(line_arr[3]) == time:
-                new_mes = message(line_arr[0], line_arr[1], line_arr[2], line_arr[3], line_arr[4])
+
+
+            if int(line_arr[5]) == time:
+                new_mes = message(line_arr[0], line_arr[1], line_arr[2], line_arr[5], line_arr[4])
                 src = int(line_arr[1])
                 self.nodes[src].buf.append(new_mes)
 
@@ -96,6 +98,8 @@ class network(object):
 #Function network_GO: completes all tasks of a network in 1 tau
     def network_GO(self, ts, LINK_EXISTS, specBW):
         self.time = ts
+        # Check if new messages were generated
+        self.add_messages(ts)
     #Send all messages
         #For each node
         for i in range(len(self.nodes)):
@@ -105,6 +109,6 @@ class network(object):
                 if mes.last_sent <= ts:
                     self.try_forwarding_message_to_all(node, mes, ts, LINK_EXISTS, specBW)
     #Handle messages that got delivered
+        self.all_messages()
         self.messages_delivered()
-     #Check if new messages were generated
-        self.add_messages(ts)
+
