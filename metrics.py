@@ -40,13 +40,12 @@ def compute_metrics(lines, total_messages, delivery_time):
 
     print("t: ", t, " msg: ", total_messages, " del: ", delivered, "lat: ", latency)
 
-
-    return delivered, latency, energy, all_IDs
+    return delivered, latency, energy, all_IDs, mes_IDs
 
 
 #Main starts here
-msg_file = open(Link_Exists_path + generated_file_name, "r")
-total_messages = len(msg_file.readlines())
+msg_file = open("../Bands" + str(max_nodes) + "/" + Link_Exists_path.split("/")[2] + "/" + "generated_messages.txt", "r")
+total_messages = len(msg_file.readlines()[1:])
 
 metric_file = open(Link_Exists_path + metrics_file_name, "w")
 f = open(Link_Exists_path + delivery_file_name, "r")
@@ -59,9 +58,10 @@ delivery_times = [i for i in range(0, T + 10, 10)]
 
 metric_file.write("#t\tPDR\tLatency\tEnergy\n")
 for t in delivery_times:
-    avg_pdr, avg_latency, avg_energy, all_IDs = compute_metrics(lines, total_messages, t)
+    avg_pdr, avg_latency, avg_energy, all_IDs, mes_IDs = compute_metrics(lines, total_messages, t)
     metric_file.write(str(t) + "\t" + str(avg_pdr) + "\t" + str(avg_latency) + "\t" + str(avg_energy) + "\n")
 
 metric_file.close()
-message_info(all_IDs)
+print("Delivered messages", sorted(mes_IDs))
+# message_info(all_IDs)
 

@@ -26,14 +26,18 @@ class network(object):
 # Function fill_network: create node objects for each datamule, source, and destination
     def fill_network(self):
         files = os.listdir(DataMule_path)
-        files.sort()
+        nodeIDs = [int(self.get_ID(file)) for file in files]
+        nodeIDs.sort()
 
-        for i in range(len(files)):
-            node_ID = self.get_ID(files[i])
+        for i in range(len(nodeIDs)):
+            node_ID = nodeIDs[i]
             node_curr = node(node_ID)
             self.add_node(node_curr)
 
-#Function send_message: sends message to all nodes in range
+    def euclideanDistance(coor1X, coor1Y, coor2X, coor2Y):
+        return (math.sqrt((float(coor1X) - float(coor2X)) ** 2 + (float(coor1Y) - float(coor2Y)) ** 2))
+
+        #Function send_message: sends message to all nodes in range
     def try_forwarding_message_to_all(self,src_node, message, tau, LINK_EXISTS, specBW):
         replica = 0
         for des_node in self.nodes:
@@ -45,32 +49,34 @@ class network(object):
                         to_send = False
 
                 if to_send == True:
+                    # if message.ID == 1:
+                    #     print("SENDING: " + str(message.ID) + " at time " + str(tau) + " from " + str(
+                    #         src_node.ID) + " to: " + str(des_node))
+
                     if src_node.try_sending_message(des_node, message, tau, replica, LINK_EXISTS, specBW):
-                       # print("SENDING: " + str(message.ID) + " at time " + str(tau) + " from " + str(src_node.ID))
                         replica += 1
 
 
 #Function is_in_communication_range: checks if 2 nodes are within range of a certain spectrum
     def is_in_communication_range(self, node1, node2):
-        dist = funHaversine(node1.coord[1], node1.coord[0], node2.coord[1], node2.coord[0])
+        # dist = funHaversine(node1.coord[1], node1.coord[0], node2.coord[1], node2.coord[0])
+        dist = self.euclideanDistance(node1.coord[0], node1.coord[1], node2.coord[0], node2.coord[1])
         if dist < 1800:
             return True
         else:
             return False
 
 #Function add_messages: adds messages to their source node at each tau
-    def add_messages(self, time):
-        with open(Link_Exists_path + generated_file_name, "r") as f:
-            lines = f.readlines()
+    def add_messages(self, time, lines):
 
         for line in lines:
             line_arr = line.strip().split()
-
 
             if int(line_arr[5]) == time:
                 new_mes = message(line_arr[0], line_arr[1], line_arr[2], line_arr[5], line_arr[4])
                 src = int(line_arr[1])
                 self.nodes[src].buf.append(new_mes)
+                # print("New message: ", new_mes.ID, new_mes.src, new_mes.des)
 
 
 #Function messages_delivered: deletes messages that have been delivered
@@ -88,19 +94,19 @@ class network(object):
     def all_messages(self):
         f = open(Link_Exists_path + notDelivered_file_name, "a")
         for node in self.nodes:
-            print("Node " + str(node.ID) + ": ")
+            # print("Node " + str(node.ID) + ": ")
             for mes in node.buf:
                 line = str(mes.ID) + "\t" + str(mes.src) + "\t" + str(mes.des) + "\t" + str(mes.genT) + "\t" + str(mes.last_sent) + "\t" + str(mes.last_sent - mes.genT) + "\t" + str(mes.size) + "\t" + str(mes.parent) + "\t" + str(mes.parentTime) + "\t" + str(mes.replica) + "\n"
-                print(line)
+                # print(line)
                 f.write(line)
         f.close()
 
-#Function network_GO: completes all tasks of a network in 1 tau
-    def network_GO(self, ts, LINK_EXISTS, specBW):
+    #Function network_GO: completes all tasks of a network in 1 tau
+    def network_GO(self, ts, LINK_EXISTS, specBW, msg_lines):
         self.time = ts
         # Check if new messages were generated
-        self.add_messages(ts)
-    #Send all messages
+        self.add_messages(ts, msg_lines)
+        #Send all messages
         #For each node
         for i in range(len(self.nodes)):
             #For each message in this nodes buffer
@@ -108,7 +114,7 @@ class network(object):
             for mes in node.buf:
                 if mes.last_sent <= ts:
                     self.try_forwarding_message_to_all(node, mes, ts, LINK_EXISTS, specBW)
-    #Handle messages that got delivered
-        self.all_messages()
+        #Handle messages that got delivered
         self.messages_delivered()
+        #self.all_messages()
 

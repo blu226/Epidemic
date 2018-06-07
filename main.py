@@ -2,7 +2,6 @@
 from network import *
 import os
 import pickle
-from generateMessage_new import *
 
 def createLinkExistenceADJ():
 
@@ -174,14 +173,17 @@ output_file2.write("ID\ts\td\tts\tte\tLLC\tsize\tparent\tparentTime\treplica\n")
 output_file2.write("----------------------------------------------------\n")
 output_file2.close()
 #Load Link Exists
-# LINK_EXISTS = pickle.load(open(Link_Exists_path + "LINK_EXISTS.pkl", "rb"))
+LINK_EXISTS = pickle.load(open(Link_Exists_path + "LINK_EXISTS.pkl", "rb"))
 specBW = pickle.load(open(Link_Exists_path + "specBW.pkl", "rb"))
-LINK_EXISTS = createLinkExistenceADJ()
-print(LINK_EXISTS[3,4,])
+# LINK_EXISTS = createLinkExistenceADJ()
+# print(LINK_EXISTS[3,4,])
+
 #Create constants
 # create_constants(time)
+
 #Generate Messages
 # create_messages()
+
 #Create network
 net = network()
 #Fill network with datamules, sources, and destinations
@@ -189,9 +191,15 @@ net.fill_network()
 #Create messages
 # path = "Bands/" + day + "/"
 # create_messages(path)
+
+message_path_file = "../Bands" + str(max_nodes) + "/" + Link_Exists_path.split("/")[2] + "/" + "generated_messages.txt"
+print(message_path_file)
+with open(message_path_file, "r") as f:
+    msg_lines = f.readlines()[1:]
+
 #Run simulation
 for i in range(T):
     print("TIME: " + str(i))
-    net.network_GO(i , LINK_EXISTS, specBW)
+    net.network_GO(i , LINK_EXISTS, specBW, msg_lines)
 
 net.all_messages()
